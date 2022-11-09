@@ -1,0 +1,32 @@
+﻿I'm sorry, but an uncaught exception occurred.
+
+While running game code:
+  File "game/script.rpy", line 70, in script call
+    call beat_menu
+  File "game/script.rpy", line 64, in script
+    return jump gameplay
+SyntaxError: unexpected EOF while parsing (script.rpy, line 64)
+
+-- Full Traceback ------------------------------------------------------------
+
+Full traceback:
+  File "game/script.rpy", line 70, in script call
+    call beat_menu
+  File "game/script.rpy", line 64, in script
+    return jump gameplay
+  File "/home/gerald/Desktop/Renpy/renpy-8.0.3-sdk/renpy/ast.py", line 1768, in execute
+    renpy.store._return = renpy.python.py_eval(self.expression)
+  File "/home/gerald/Desktop/Renpy/renpy-8.0.3-sdk/renpy/python.py", line 1090, in py_eval
+    code = py_compile(code, 'eval')
+  File "/home/gerald/Desktop/Renpy/renpy-8.0.3-sdk/renpy/python.py", line 1027, in py_compile
+    raise e
+  File "/home/gerald/Desktop/Renpy/renpy-8.0.3-sdk/renpy/python.py", line 979, in py_compile
+    raise orig_e
+  File "/home/gerald/Desktop/Renpy/renpy-8.0.3-sdk/renpy/python.py", line 972, in py_compile
+    tree = compile(source, filename, py_mode, ast.PyCF_ONLY_AST | flags, 1)
+SyntaxError: unexpected EOF while parsing (script.rpy, line 64)
+
+Linux-5.15.0-52-generic-x86_64-with-glibc2.35 x86_64
+Ren'Py 8.0.3.22090809
+Kakegurui 1.0
+Thu Nov 10 00:19:04 2022
