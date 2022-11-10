@@ -2,9 +2,9 @@
 errors listed below, and try again.
 
 
-File "game/script.rpy", line 60: expected statement.
-    money-beat
-              ^
+File "game/script.rpy", line 248: expected statement.
+    counter += 1
+            ^
 
 Ren'Py Version: Ren'Py 8.0.3.22090809
-Thu Nov 10 00:18:13 2022
+Thu Nov 10 11:02:01 2022

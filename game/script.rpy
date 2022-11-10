@@ -1,7 +1,22 @@
 ﻿
-image bg intro = "bg_intro.jpg"
-image user_picked_card = "[user_card]_idle.png"
+image bg intro = "the casino background.jpg"
+
+image player_picked_card = "[player_card]_idle.png"
 image opponent_picked_card = "[opponent_card]_idle.png"
+
+# For main character
+
+image cassandra:
+    "images/cassandra/cassandra_1.png"
+    pause 0.5
+    "images/cassandra/cassandra_2.png"
+    pause 0.1
+    "images/cassandra/cassandra_1.png"
+
+image opponent:
+    "images/[opponent_name]/[opponent_name]_1.png"
+    pause 0.1
+    "images/[opponent_name]/[opponent_name]_2.png"
 
 # The game starts here.
 
@@ -9,7 +24,11 @@ label start:
 
     scene bg intro
 
+    # For initialization
+
     call variables
+
+    # To display current money of the player
 
     show screen show_money
 
@@ -28,22 +47,28 @@ label start:
 
     return
 
+# Initialize variables
+
 label variables:
-    $ user_card = " "
+    $ player_cards_drawn = ["cards1", "cards2", "cards3"]
+    $ player_card = " "
     $ opponent_card = " "
     $ level = 1
     $ winner = " "
     $ money = 2000
     $ beat = 0
+    $ opponent_name = " "
     return
+
+# Manage game and level
 
 label gameplay:
 
-    hide user_picked_card
+    hide player_picked_card
     hide opponent_picked_card 
     
     $ text = level
-    $ user_card = " "
+    $ player_card = " "
     $ opponent_card = " " 
 
     if level == 1:
@@ -61,6 +86,8 @@ label gameplay:
     elif level == 7:
         jump level_7
 
+# To display the beat in each game and subtruct the beat to the current money of player
+
 label beat_menu:
     menu:
         "Beat [beat]":
@@ -73,21 +100,33 @@ label beat_menu:
         "Main menu":
             jump start_menu
 
+# Handle levels
 
 label level_1:
 
     call show_text("Level 1")
 
     $ beat = 100
+    
     call beat_menu
     
+    # For displaying opponent images
+
+    $ opponent_name = "pride"
+
+    # To start the round
+
     jump play_round
     
 label level_2:
+
     call show_text("Level 2")
 
     $ beat = 200 
+    
     call beat_menu
+
+    $ opponent_name = "envy"
 
     jump play_round
 
@@ -97,6 +136,7 @@ label level_3:
     $ beat = 300 
     call beat_menu
 
+    $ opponent_name = "gluttony"
     jump play_round
 
 label level_4:
@@ -105,6 +145,7 @@ label level_4:
     $ beat = 400 
     call beat_menu
 
+    $ opponent_name = "lust"
     jump play_round
 
 label level_5:
@@ -113,6 +154,7 @@ label level_5:
     $ beat = 500 
     call beat_menu
 
+    $ opponent_name = "anger"
     jump play_round
 
 label level_6:
@@ -121,6 +163,7 @@ label level_6:
     $ beat = 600
     call beat_menu
 
+    $ opponent_name = "greed"
     jump play_round
 
 label level_7:
@@ -129,40 +172,61 @@ label level_7:
     $ beat = 700
     call beat_menu
 
+    $ opponent_name = "sloth"
     jump play_round
+
+# To play each round
     
 label play_round:
 
-    $ user_card = renpy.call_screen("choose_cards")
+    call player_card_randomizer
 
-    call opponent_card_number_picker
+    # players turn
+
+    show cassandra
+    call show_text("Your turn")
+    $ player_card = renpy.call_screen("choose_cards")
+
+    # Opponent turn
+
+    hide cassandra
+    show opponent
+    call show_text("Opponents turn")
+
+    # To generate random number
+
+    call card_picker
+
+    # To transform each number into a card
     
-    if opponent_card_number == 1:
+    if card_picked == 1:
         $ opponent_card = "rock"
-    elif opponent_card_number == 2:
+    elif card_picked == 2:
         $ opponent_card = "paper"
     else:
         $ opponent_card = "scissors"
+
+    hide opponent
 
     while True:
         
         # For deciding winner
 
-        if user_card == opponent_card:
+        if player_card == opponent_card:
             $ winner = "tie"
-        elif user_card == "rock":
+        elif player_card == "rock":
             if opponent_card == "scissors":
-                $ winner = "user"
+                $ winner = "player"
             else:
                 $ winner = "opponent"
-        elif user_card == "paper":
+        elif player_card == "paper":
             if opponent_card == "rock":
-                $ winner = "user"
+                $ winner = "player"
             else:
                 $ winner = "opponent"
-        elif user_card == "scissors":
+        elif player_card == "scissors":
             if opponent_card == "paper":
-                $ winner = "user"
+                $ winner = "player"
             else:
                 $ winner = "opponent"
 
@@ -172,7 +236,7 @@ label play_round:
         
         # To handle winner        
 
-        if winner == "user":
+        if winner == "player":
             call show_text("You win")
             $ level += 1
             $ money += beat
@@ -205,19 +269,34 @@ label play_round:
                     $ level = 1
                     jump start_menu
 
+# To show choosen card of the player and the opponent
+
 label show_choosen_card:
-    show user_picked_card with dissolve:
+
+    # Shows picked card of the player
+
+    show player_picked_card with dissolve:
         xalign 0.3
         yalign 0.5
+
+    # Shows picked card of the player
+
     show opponent_picked_card with dissolve:
         xalign 0.7
         yalign 0.5
+
+    # To puase the game for 1 sec. while shoowing off the card
+
     pause 1
-    hide user_picked_card
+
+    # To hide cards
+
+    hide player_picked_card
     hide opponent_picked_card 
+
     return
     
-
+# To display text
 
 label show_text(text):
     show text "[text]" at truecenter with dissolve
@@ -225,31 +304,53 @@ label show_text(text):
     hide text with dissolve
     return
 
-label opponent_card_number_picker:
-    $ opponent_card_number = renpy.random.randint(1, 4)
+# To generate random number for random card selection
+
+label card_picker:
+    $ card_picked = renpy.random.randint(1, 4)
     return
+
+# Picked 3 random cards for the player option attack
+
+label player_card_randomizer:
+    $ card_amount = 3
+    $ counter = 0
+
+    # To loop 3 times and convert each random number to valid card
+    # Each coverted valid card is stored in the player cards
+
+    while counter < card_amount:
+        call card_picker
+        if card_picked == 1:
+            $ player_cards_drawn[counter] = "rock"
+        elif card_picked == 2:
+            $ player_cards_drawn[counter] = "paper"
+        else:
+            $ player_cards_drawn[counter] = "scissors"
+        $ counter += 1
+
+    return
+
+# To display the cards for player option
 
 screen choose_cards:
     
     vbox:
         xalign 0.5
         yalign 0.9
-        spacing 30
         text "Choose card" at center
         hbox: 
-            spacing 50
             imagebutton:
-                idle "rock_idle.png"
-                hover "rock_hover.png"
-                action Return("rock")
+                idle "[player_cards_drawn[0]]_idle.png"
+                action Return(player_cards_drawn[0])
             imagebutton:
-                idle "paper_idle.png"
-                hover "paper_hover.png"
-                action Return("paper")
+                idle "[player_cards_drawn[1]]_idle.png"
+                action Return(player_cards_drawn[1])
             imagebutton:
-                idle "scissors_idle.png"
-                hover "scissors_hover.png"
-                action Return("scissors")
+                idle "[player_cards_drawn[2]]_idle.png"
+                action Return(player_cards_drawn[2])
+
+# To display the current money of the player
 
 screen show_money:
     text "Current money: [money]":
