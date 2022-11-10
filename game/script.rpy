@@ -1,21 +1,15 @@
 ﻿
-define e = Character("Eileen")
-define user_card = " "
-define opponent_card = " "
-define level = 1
-define winner = " "
-define money = 1000
-define beat = 0
-
 image bg intro = "bg_intro.jpg"
-image user_picked_card = "[user_card].png"
-image opponent_picked_card = "[opponent_card].png"
+image user_picked_card = "[user_card]_idle.png"
+image opponent_picked_card = "[opponent_card]_idle.png"
 
 # The game starts here.
 
 label start:
 
     scene bg intro
+
+    call variables
 
     show screen show_money
 
@@ -28,11 +22,19 @@ label start:
             jump start_menu
         "Reset Game":
             $ level = 1
-            $ money = 1000
+            $ money = 2000
             call show_text("Game Reseted")
             jump start_menu
-    
 
+    return
+
+label variables:
+    $ user_card = " "
+    $ opponent_card = " "
+    $ level = 1
+    $ winner = " "
+    $ money = 2000
+    $ beat = 0
     return
 
 label gameplay:
@@ -58,13 +60,11 @@ label gameplay:
         jump level_6
     elif level == 7:
         jump level_7
-    else:
-        call show_text("You cleared the game")
 
 label beat_menu:
     menu:
         "Beat [beat]":
-            if money-beat > 0:
+            if money-beat >= 0:
                 $ money -= beat
                 return
             else:
@@ -86,7 +86,7 @@ label level_1:
 label level_2:
     call show_text("Level 2")
 
-    $ beat = 200
+    $ beat = 200 
     call beat_menu
 
     jump play_round
@@ -94,7 +94,7 @@ label level_2:
 label level_3:
     call show_text("Level 3")
 
-    $ beat = 300
+    $ beat = 300 
     call beat_menu
 
     jump play_round
@@ -102,7 +102,7 @@ label level_3:
 label level_4:
     call show_text("Level 4")
 
-    $ beat = 400
+    $ beat = 400 
     call beat_menu
 
     jump play_round
@@ -110,7 +110,7 @@ label level_4:
 label level_5:
     call show_text("Level 5")
 
-    $ beat = 500
+    $ beat = 500 
     call beat_menu
 
     jump play_round
@@ -170,12 +170,22 @@ label play_round:
         
         call show_choosen_card
         
-        # Do handle winner        
+        # To handle winner        
 
         if winner == "user":
             call show_text("You win")
             $ level += 1
             $ money += beat
+
+            # To handle end level winner
+            # Reset game and money to start at the beggining
+
+            if level > 7:
+                call show_text("Congratiolations! You beat the game")
+                $ level = 1
+                $ money = 2000
+                jump start_menu
+
             menu:
                 "Continue to level [level]":
                     jump gameplay
@@ -229,13 +239,16 @@ screen choose_cards:
         hbox: 
             spacing 50
             imagebutton:
-                idle "rock.png"
+                idle "rock_idle.png"
+                hover "rock_hover.png"
                 action Return("rock")
             imagebutton:
-                idle "paper.png"
+                idle "paper_idle.png"
+                hover "paper_hover.png"
                 action Return("paper")
             imagebutton:
-                idle "scissors.png"
+                idle "scissors_idle.png"
+                hover "scissors_hover.png"
                 action Return("scissors")
 
 screen show_money:
