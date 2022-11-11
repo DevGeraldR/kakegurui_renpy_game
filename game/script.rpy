@@ -26,7 +26,7 @@ label start:
 
     # For initialization
 
-    call variables
+    call variables from _call_variables
 
     # To display current money of the player
 
@@ -37,12 +37,12 @@ label start:
             jump gameplay
         "Reset Level":
             $ level = 1
-            call show_text("Level Reseted")
+            call show_text("Level Reseted") from _call_show_text
             jump start_menu
         "Reset Game":
             $ level = 1
             $ money = 2000
-            call show_text("Game Reseted")
+            call show_text("Game Reseted") from _call_show_text_1
             jump start_menu
 
     return
@@ -95,7 +95,7 @@ label beat_menu:
                 $ money -= beat
                 return
             else:
-                call show_text("You don't have enough balance")
+                call show_text("You don't have enough balance") from _call_show_text_2
                 jump gameplay
         "Main menu":
             jump start_menu
@@ -104,11 +104,11 @@ label beat_menu:
 
 label level_1:
 
-    call show_text("Level 1")
+    call show_text("Level 1") from _call_show_text_3
 
     $ beat = 100
     
-    call beat_menu
+    call beat_menu from _call_beat_menu
     
     # For displaying opponent images
 
@@ -120,57 +120,57 @@ label level_1:
     
 label level_2:
 
-    call show_text("Level 2")
+    call show_text("Level 2") from _call_show_text_4
 
     $ beat = 200 
     
-    call beat_menu
+    call beat_menu from _call_beat_menu_1
 
     $ opponent_name = "envy"
 
     jump play_round
 
 label level_3:
-    call show_text("Level 3")
+    call show_text("Level 3") from _call_show_text_5
 
     $ beat = 300 
-    call beat_menu
+    call beat_menu from _call_beat_menu_2
 
     $ opponent_name = "gluttony"
     jump play_round
 
 label level_4:
-    call show_text("Level 4")
+    call show_text("Level 4") from _call_show_text_6
 
     $ beat = 400 
-    call beat_menu
+    call beat_menu from _call_beat_menu_3
 
     $ opponent_name = "lust"
     jump play_round
 
 label level_5:
-    call show_text("Level 5")
+    call show_text("Level 5") from _call_show_text_7
 
     $ beat = 500 
-    call beat_menu
+    call beat_menu from _call_beat_menu_4
 
     $ opponent_name = "anger"
     jump play_round
 
 label level_6:
-    call show_text("Level 6")
+    call show_text("Level 6") from _call_show_text_8
 
     $ beat = 600
-    call beat_menu
+    call beat_menu from _call_beat_menu_5
 
     $ opponent_name = "greed"
     jump play_round
 
 label level_7:
-    call show_text("Level 7")
+    call show_text("Level 7") from _call_show_text_9
 
     $ beat = 700
-    call beat_menu
+    call beat_menu from _call_beat_menu_6
 
     $ opponent_name = "sloth"
     jump play_round
@@ -179,23 +179,23 @@ label level_7:
     
 label play_round:
 
-    call player_card_randomizer
+    call player_card_randomizer from _call_player_card_randomizer
 
     # players turn
 
     show cassandra
-    call show_text("Your turn")
+    call show_text("Your turn") from _call_show_text_10
     $ player_card = renpy.call_screen("choose_cards")
 
     # Opponent turn
 
     hide cassandra
     show opponent
-    call show_text("Opponents turn")
+    call show_text("Opponents turn") from _call_show_text_11
 
     # To generate random number
 
-    call card_picker
+    call card_picker from _call_card_picker
 
     # To transform each number into a card
     
@@ -232,12 +232,12 @@ label play_round:
 
         # For displaying players card
         
-        call show_choosen_card
+        call show_choosen_card from _call_show_choosen_card
         
         # To handle winner        
 
         if winner == "player":
-            call show_text("You win")
+            call show_text("You win") from _call_show_text_12
             $ level += 1
             $ money += beat
 
@@ -245,7 +245,7 @@ label play_round:
             # Reset game and money to start at the beggining
 
             if level > 7:
-                call show_text("Congratiolations! You beat the game")
+                call show_text("Congratiolations! You beat the game") from _call_show_text_13
                 $ level = 1
                 $ money = 2000
                 jump start_menu
@@ -257,10 +257,10 @@ label play_round:
                     jump start_menu
         else:
             if winner == "opponent":
-                call show_text("You lose")
+                call show_text("You lose") from _call_show_text_14
             else:
                 $ money += beat
-                call show_text("Tie")
+                call show_text("Tie") from _call_show_text_15
 
             menu:
                 "Play Again":
@@ -320,7 +320,7 @@ label player_card_randomizer:
     # Each coverted valid card is stored in the player cards
 
     while counter < card_amount:
-        call card_picker
+        call card_picker from _call_card_picker_1
         if card_picked == 1:
             $ player_cards_drawn[counter] = "rock"
         elif card_picked == 2:

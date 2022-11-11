@@ -2,9 +2,9 @@
 errors listed below, and try again.
 
 
-File "game/script.rpy", line 248: expected statement.
-    counter += 1
-            ^
+File "game/screens.rpy", line 1: expected statement.
+    ﻿
+     ^
 
 Ren'Py Version: Ren'Py 8.0.3.22090809
-Thu Nov 10 11:02:01 2022
+Fri Nov 11 22:17:35 2022

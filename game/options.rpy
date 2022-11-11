@@ -62,8 +62,7 @@ define config.has_voice = True
 ## the player is at the main menu. This file will continue playing into the
 ## game, until it is stopped or another file is played.
 
-# define config.main_menu_music = "main-menu-theme.ogg"
-
+define config.main_menu_music = "audio/Deal_with_the_Devil.mp3"
 
 ## Transitions #################################################################
 ##
@@ -90,7 +89,6 @@ define config.after_load_transition = None
 ## Used when entering the main menu after the game has ended.
 
 define config.end_game_transition = None
-
 
 ## A variable to set the transition used when the game starts does not exist.
 ## Instead, use a with statement after showing the initial scene.

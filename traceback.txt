@@ -1,7 +1,7 @@
 ﻿I'm sorry, but an uncaught exception occurred.
 
-While loading <renpy.display.im.Image object ('gui/main_menu.png') at 0x7fd7b0cfad00>:
-OSError: Couldn't find file 'gui/main_menu.png'.
+While running game code:
+Exception: Could not find font 'BungeeShade-Regular.ttf'.
 
 -- Full Traceback ------------------------------------------------------------
 
@@ -46,19 +46,37 @@ Full traceback:
     surf = render(child, width, height, cst, cat)
   File "render.pyx", line 170, in renpy.display.render.render
   File "render.pyx", line 266, in renpy.display.render.render
-  File "/home/gerald/Desktop/Renpy/renpy-8.0.3-sdk/renpy/display/im.py", line 627, in render
-    return cache.get(self, render=True)
-  File "/home/gerald/Desktop/Renpy/renpy-8.0.3-sdk/renpy/display/im.py", line 295, in get
-    surf = image.load()
-  File "/home/gerald/Desktop/Renpy/renpy-8.0.3-sdk/renpy/display/im.py", line 720, in load
-    raise e
-  File "/home/gerald/Desktop/Renpy/renpy-8.0.3-sdk/renpy/display/im.py", line 685, in load
-    filelike = renpy.loader.load(self.filename)
-  File "/home/gerald/Desktop/Renpy/renpy-8.0.3-sdk/renpy/loader.py", line 820, in load
-    raise IOError("Couldn't find file '%s'." % name)
-OSError: Couldn't find file 'gui/main_menu.png'.
+  File "/home/gerald/Desktop/Renpy/renpy-8.0.3-sdk/renpy/display/layout.py", line 1105, in render
+    surf = render(d, width - x, rh, cst, cat)
+  File "render.pyx", line 170, in renpy.display.render.render
+  File "render.pyx", line 266, in renpy.display.render.render
+  File "/home/gerald/Desktop/Renpy/renpy-8.0.3-sdk/renpy/display/behavior.py", line 885, in render
+    rv = super(Button, self).render(width, height, st, at)
+  File "/home/gerald/Desktop/Renpy/renpy-8.0.3-sdk/renpy/display/layout.py", line 1287, in render
+    xminimum = max(xminimum, size_groups[size_group].width(width, height, st, at))
+  File "/home/gerald/Desktop/Renpy/renpy-8.0.3-sdk/renpy/display/layout.py", line 1224, in width
+    rend = renpy.display.render.render_for_size(i, width, height, st, at)
+  File "render.pyx", line 318, in renpy.display.render.render_for_size
+  File "render.pyx", line 266, in renpy.display.render.render
+  File "/home/gerald/Desktop/Renpy/renpy-8.0.3-sdk/renpy/display/behavior.py", line 885, in render
+    rv = super(Button, self).render(width, height, st, at)
+  File "/home/gerald/Desktop/Renpy/renpy-8.0.3-sdk/renpy/display/layout.py", line 1334, in render
+    surf = render(child,
+  File "render.pyx", line 170, in renpy.display.render.render
+  File "render.pyx", line 266, in renpy.display.render.render
+  File "/home/gerald/Desktop/Renpy/renpy-8.0.3-sdk/renpy/text/text.py", line 2109, in render
+    virtual_layout = Layout(self, width, height, renders, drawable_res=False, size_only=True)
+  File "/home/gerald/Desktop/Renpy/renpy-8.0.3-sdk/renpy/text/text.py", line 656, in __init__
+    glyphs = ts.glyphs(s, self)
+  File "/home/gerald/Desktop/Renpy/renpy-8.0.3-sdk/renpy/text/text.py", line 255, in glyphs
+    fo = font.get_font(self.font, self.size, self.bold, self.italic, 0, self.antialias, self.vertical, self.hinting, layout.oversample)
+  File "/home/gerald/Desktop/Renpy/renpy-8.0.3-sdk/renpy/text/font.py", line 717, in get_font
+    face = load_face(fn)
+  File "/home/gerald/Desktop/Renpy/renpy-8.0.3-sdk/renpy/text/font.py", line 658, in load_face
+    raise Exception("Could not find font {0!r}.".format(orig_fn))
+Exception: Could not find font 'BungeeShade-Regular.ttf'.
 
 Linux-5.15.0-52-generic-x86_64-with-glibc2.35 x86_64
 Ren'Py 8.0.3.22090809
 Kakegurui 1.0
-Thu Nov 10 18:09:56 2022
+Fri Nov 11 22:31:51 2022
