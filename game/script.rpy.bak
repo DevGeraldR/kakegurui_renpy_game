@@ -1,4 +1,5 @@
-﻿
+﻿define cassandra = Character("Cassandra", who_color="#c8ffc8")
+
 image bg intro = "the casino background.jpg"
 
 image player_picked_card = "[player_card]_idle.png"
@@ -13,10 +14,15 @@ image cassandra:
     pause 0.1
     "images/cassandra/cassandra_1.png"
 
-image opponent:
-    "images/[opponent_name]/[opponent_name]_1.png"
-    pause 0.1
-    "images/[opponent_name]/[opponent_name]_2.png"
+# For opponet video when choosing attack 
+
+image pride_turn = Movie(play = "images/pride/pride.webm", loop = False)
+image envy_turn = Movie(play = "images/envy/envy.webm", loop = False)
+image gluttony_turn = Movie(play = "images/gluttony/gluttony.webm", loop = False)
+image greed_turn = Movie(play = "images/greed/greed.webm", loop = False)
+image lust_turn = Movie(play = "images/lust/lust.webm", loop = False)
+image sloth_turn = Movie(play = "images/sloth/sloth.webm", loop = False)
+image anger_turn = Movie(play = "images/anger/anger.webm", loop = False)
 
 # The game starts here.
 
@@ -26,7 +32,7 @@ label start:
 
     # For initialization
 
-    call variables
+    call variables from _call_variables
 
     # To display current money of the player
 
@@ -37,12 +43,12 @@ label start:
             jump gameplay
         "Reset Level":
             $ level = 1
-            call show_text("Level Reseted")
+            call show_text("Level Reseted") from _call_show_text
             jump start_menu
         "Reset Game":
             $ level = 1
-            $ money = 2000
-            call show_text("Game Reseted")
+            $ money = 10000
+            call show_text("Game Reseted") from _call_show_text_1
             jump start_menu
 
     return
@@ -55,9 +61,12 @@ label variables:
     $ opponent_card = " "
     $ level = 1
     $ winner = " "
-    $ money = 2000
+    $ money = 10000
     $ bet = 0
     $ opponent_name = " "
+    $ player_score = 0
+    $ opponent_score = 0
+    $ round_number = 1
     return
 
 # Manage game and level
@@ -70,6 +79,9 @@ label gameplay:
     $ text = level
     $ player_card = " "
     $ opponent_card = " " 
+    $ player_score = 0
+    $ opponent_score = 0
+    $ round_number = 1
 
     if level == 1:
         jump level_1
@@ -90,25 +102,59 @@ label gameplay:
 
 label bet_menu:
     menu:
-        "bet [bet]":
+        "Bet [bet]":
             if money-bet >= 0:
+                play sound "audio/chips_bet.ogg"
                 $ money -= bet
                 return
             else:
-                call show_text("You don't have enough balance")
-                jump gameplay
-        "Main menu":
+                call show_text("You don't have enough balance") from _call_show_text_2
+                jump bet_menu
+        "Quit":
+            # To hide scores
+            hide screen show_scores
             jump start_menu
 
 # Handle levels
 
 label level_1:
 
-    call show_text("Level 1")
+    show cassandra    
 
-    $ bet = 100
+    cassandra """
+
+    Hi welcome to The Cardinal Sins: A card game
+
+    These are the rules of the game
+
+    The game will be different from the traditional rock, paper, scissors game. The players will be dealt with three random cards it will be either rock, paper, or scissors.
+
+    The player will start with 10,000 chips at the begging of the game.
     
-    call bet_menu
+    The game will progress through seven story chapters representing the seven deadly sins.
+
+    Higher level means higher betting chips.
+
+    If there is a tie, the player will play the cards until someone wins or the game ends.
+
+    Are you ready to play with The Cardinal Sins?
+    
+    """
+    
+    hide cassandra
+
+    window hide
+
+    call show_text("Level 1") from _call_show_text_3
+
+    show cassandra
+
+    cassandra "Are you ready to play with Pride?"
+
+    hide cassandra
+    
+
+    $ bet = 1000
     
     # For displaying opponent images
 
@@ -120,57 +166,86 @@ label level_1:
     
 label level_2:
 
-    call show_text("Level 2")
+    call show_text("Level 2") from _call_show_text_4
 
-    $ bet = 200 
-    
-    call bet_menu
+    show cassandra
+
+    cassandra "Are you ready to play with Envy?"
+
+    hide cassandra
+
+    $ bet = 2000 
 
     $ opponent_name = "envy"
 
     jump play_round
 
 label level_3:
-    call show_text("Level 3")
+    call show_text("Level 3") from _call_show_text_5
 
-    $ bet = 300 
-    call bet_menu
+    show cassandra
+
+    cassandra "Are you ready to play with Gluttony?"
+
+    hide cassandra
+
+    $ bet = 3000 
 
     $ opponent_name = "gluttony"
     jump play_round
 
 label level_4:
-    call show_text("Level 4")
+    call show_text("Level 4") from _call_show_text_6
 
-    $ bet = 400 
-    call bet_menu
+    show cassandra
+
+    cassandra "Are you ready to play with Lust?"
+
+    hide cassandra
+
+    $ bet = 4000 
 
     $ opponent_name = "lust"
     jump play_round
 
 label level_5:
-    call show_text("Level 5")
+    call show_text("Level 5") from _call_show_text_7
 
-    $ bet = 500 
-    call bet_menu
+    show cassandra
+
+    cassandra "Are you ready to play with Anger?"
+
+    hide cassandra
+
+    $ bet = 5000 
 
     $ opponent_name = "anger"
     jump play_round
 
 label level_6:
-    call show_text("Level 6")
+    call show_text("Level 6") from _call_show_text_8
 
-    $ bet = 600
-    call bet_menu
+    show cassandra
+
+    cassandra "Are you ready to play with Greed?"
+
+    hide cassandra
+
+    $ bet = 6000
 
     $ opponent_name = "greed"
     jump play_round
 
 label level_7:
-    call show_text("Level 7")
+    call show_text("Level 7") from _call_show_text_9
 
-    $ bet = 700
-    call bet_menu
+    show cassandra
+
+    cassandra "Are you ready to play with Sloth?"
+
+    hide cassandra
+
+    $ bet = 7000
 
     $ opponent_name = "sloth"
     jump play_round
@@ -179,37 +254,44 @@ label level_7:
     
 label play_round:
 
-    call player_card_randomizer
+    show screen show_scores
 
-    # players turn
+    while round_number <= 3:
 
-    show cassandra
-    call show_text("Your turn")
-    $ player_card = renpy.call_screen("choose_cards")
+        call show_round(round_number)
 
-    # Opponent turn
+        call bet_menu from _call_bet_menu
 
-    hide cassandra
-    show opponent
-    call show_text("Opponents turn")
+        call player_card_randomizer from _call_player_card_randomizer
 
-    # To generate random number
+        # players turn
 
-    call card_picker
+        show cassandra
+        call show_text("Your turn") from _call_show_text_10
+        $ player_card = renpy.call_screen("choose_cards")
 
-    # To transform each number into a card
-    
-    if card_picked == 1:
-        $ opponent_card = "rock"
-    elif card_picked == 2:
-        $ opponent_card = "paper"
-    else:
-        $ opponent_card = "scissors"
+        # Opponent turn
 
-    hide opponent
+        hide cassandra
+        call show_opponent
+        call show_text("Opponents turn") from _call_show_text_11
 
-    while True:
+        # To generate random number
+
+        call card_picker from _call_card_picker
+
+        # To transform each number into a card
         
+        if card_picked == 1:
+            $ opponent_card = "rock"
+        elif card_picked == 2:
+            $ opponent_card = "paper"
+        else:
+            $ opponent_card = "scissors"
+
+        play sound "audio/jack_en_poy.ogg"
+        call show_text("Result")
+
         # For deciding winner
 
         if player_card == opponent_card:
@@ -232,42 +314,78 @@ label play_round:
 
         # For displaying players card
         
-        call show_choosen_card
+        call show_choosen_card from _call_show_choosen_card
         
-        # To handle winner        
+        # To handle winner       
 
         if winner == "player":
-            call show_text("You win")
-            $ level += 1
+            play sound "audio/win.ogg"
+            call show_text("You win") 
+            $ player_score += 1
+            $ round_number += 1
+            $ bet += bet
+        
+        elif winner == "opponent":
+            play sound "audio/lost.ogg"
+            call show_text("You lose") 
+            $ opponent_score += 1
+            $ round_number += 1
+            $ bet += bet
+        else:
+            call show_text("Tie") 
             $ money += bet
 
-            # To handle end level winner
-            # Reset game and money to start at the beggining
+    # To hide scores
 
-            if level > 7:
-                call show_text("Congratiolations! You bet the game")
+    hide screen show_scores
+
+    if player_score > opponent_score:
+        call show_text("You win the game") from _call_show_text_12
+        $ level += 1
+        $ money += bet
+
+        # To handle end level winner
+        # Reset game and money to start at the beggining
+
+        if level > 7:
+            call show_text("Congratiolations! You bet the game") from _call_show_text_13
+            $ level = 1
+            $ money = 2000
+            jump start_menu
+
+        menu:
+            "Continue to level [level]":
+                jump gameplay
+            "Main Menu":
+                jump start_menu
+    else:
+        call show_text("You lose the game") from _call_show_text_14
+        menu:
+            "Play Again":
+                jump gameplay
+            "Main menu":
                 $ level = 1
-                $ money = 2000
                 jump start_menu
 
-            menu:
-                "Continue to level [level]":
-                    jump gameplay
-                "Main Menu":
-                    jump start_menu
-        else:
-            if winner == "opponent":
-                call show_text("You lose")
-            else:
-                $ money += bet
-                call show_text("Tie")
+# To display oppent when their turn
 
-            menu:
-                "Play Again":
-                    jump gameplay
-                "Main menu":
-                    $ level = 1
-                    jump start_menu
+label show_opponent:
+    if opponent_name == "pride":
+        show pride_turn
+    elif opponent_name == "envy":
+        show envy_turn
+    elif opponent_name == "gluttony":
+        show gluttony_turn 
+    elif opponent_name == "greed":
+        show greed_turn
+    elif opponent_name == "lust":
+        show lust_turn
+    elif opponent_name == "sloth":
+        show sloth_turn
+    elif opponent_name == "anger":
+        show anger_turn
+    pause 1.5
+    return
 
 # To show choosen card of the player and the opponent
 
@@ -295,6 +413,14 @@ label show_choosen_card:
     hide opponent_picked_card 
 
     return
+
+# To rounds text
+
+label show_round(round):
+    show text "Round [round]" at truecenter with dissolve
+    pause 1
+    hide text with dissolve
+    return
     
 # To display text
 
@@ -320,7 +446,7 @@ label player_card_randomizer:
     # Each coverted valid card is stored in the player cards
 
     while counter < card_amount:
-        call card_picker
+        call card_picker from _call_card_picker_1
         if card_picked == 1:
             $ player_cards_drawn[counter] = "rock"
         elif card_picked == 2:
@@ -353,6 +479,14 @@ screen choose_cards:
 # To display the current money of the player
 
 screen show_money:
-    text "Current money: [money]":
+    text "Chips: [money]":
         xalign 0.5
+        yalign 0.1
+
+screen show_scores:
+    text "Player Score: [player_score]":
+        xalign 0.1
+        yalign 0.1
+    text "Opponent Score: [opponent_score]":
+        xalign 0.9
         yalign 0.1

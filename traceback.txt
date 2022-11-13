@@ -1,29 +1,29 @@
 ﻿I'm sorry, but an uncaught exception occurred.
 
 While running game code:
-  File "game/script.rpy", line 42, in script
-    menu start_menu:
-OSError: Couldn't find file 'lost.mp3'.
+  File "game/script.rpy", line 297, in script call
+    call show_text("You lose")
+  File "game/script.rpy", line 397, in script
+    show text "[text]" at truecenter with dissolve
+OSError: Couldn't find file 'lost.ogg'.
 
 -- Full Traceback ------------------------------------------------------------
 
 Full traceback:
-  File "game/script.rpy", line 42, in script
-    menu start_menu:
-  File "/home/gerald/Desktop/Renpy/renpy-8.0.3-sdk/renpy/ast.py", line 1903, in execute
-    choice = renpy.exports.menu(choices, self.set, args, kwargs, item_arguments)
-  File "/home/gerald/Desktop/Renpy/renpy-8.0.3-sdk/renpy/exports.py", line 1010, in menu
-    rv = renpy.store.menu(new_items)
-  File "/home/gerald/Desktop/Renpy/renpy-8.0.3-sdk/renpy/exports.py", line 1250, in display_menu
-    rv = renpy.ui.interact(mouse='menu', type=type, roll_forward=roll_forward)
-  File "/home/gerald/Desktop/Renpy/renpy-8.0.3-sdk/renpy/ui.py", line 299, in interact
-    rv = renpy.game.interface.interact(roll_forward=roll_forward, **kwargs)
+  File "game/script.rpy", line 297, in script call
+    call show_text("You lose")
+  File "game/script.rpy", line 397, in script
+    show text "[text]" at truecenter with dissolve
+  File "/home/gerald/Desktop/Renpy/renpy-8.0.3-sdk/renpy/ast.py", line 1658, in execute
+    renpy.exports.with_statement(trans, paired=paired)
+  File "/home/gerald/Desktop/Renpy/renpy-8.0.3-sdk/renpy/exports.py", line 1657, in with_statement
+    return renpy.game.interface.do_with(trans, paired, clear=clear)
+  File "/home/gerald/Desktop/Renpy/renpy-8.0.3-sdk/renpy/display/core.py", line 2798, in do_with
+    return self.interact(trans_pause=True,
   File "/home/gerald/Desktop/Renpy/renpy-8.0.3-sdk/renpy/display/core.py", line 3377, in interact
     repeat, rv = self.interact_core(preloads=preloads, trans_pause=trans_pause, pause=pause, pause_start=pause_start, pause_modal=pause_modal, **kwargs) # type: ignore
-  File "/home/gerald/Desktop/Renpy/renpy-8.0.3-sdk/renpy/display/core.py", line 3846, in interact_core
-    renpy.audio.audio.interact()
-  File "/home/gerald/Desktop/Renpy/renpy-8.0.3-sdk/renpy/audio/audio.py", line 1213, in interact
-    periodic()
+  File "/home/gerald/Desktop/Renpy/renpy-8.0.3-sdk/renpy/display/core.py", line 4103, in interact_core
+    renpy.audio.audio.periodic()
   File "/home/gerald/Desktop/Renpy/renpy-8.0.3-sdk/renpy/audio/audio.py", line 1166, in periodic
     raise_(exc[0], exc[1], exc[2])
   File "/home/tom/ab/renpy-build/tmp/install.linux-x86_64/lib/python3.9/site-packages/future/utils/__init__.py", line 441, in raise_
@@ -37,9 +37,9 @@ Full traceback:
     rv = renpy.loader.load(fn)
   File "/home/gerald/Desktop/Renpy/renpy-8.0.3-sdk/renpy/loader.py", line 820, in load
     raise IOError("Couldn't find file '%s'." % name)
-OSError: Couldn't find file 'lost.mp3'.
+OSError: Couldn't find file 'lost.ogg'.
 
 Linux-5.15.0-52-generic-x86_64-with-glibc2.35 x86_64
 Ren'Py 8.0.3.22090809
 Kakegurui 1.0
-Sat Nov 12 20:33:28 2022
+Sun Nov 13 14:26:04 2022

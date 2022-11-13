@@ -1,4 +1,5 @@
-﻿
+﻿define cassandra = Character("Cassandra", who_color="#c8ffc8")
+
 image bg intro = "the casino background.jpg"
 
 image player_picked_card = "[player_card]_idle.png"
@@ -27,8 +28,6 @@ image anger_turn = Movie(play = "images/anger/anger.webm", loop = False)
 
 label start:
 
-    stop music
-
     scene bg intro
 
     # For initialization
@@ -48,7 +47,7 @@ label start:
             jump start_menu
         "Reset Game":
             $ level = 1
-            $ money = 2000
+            $ money = 10000
             call show_text("Game Reseted") from _call_show_text_1
             jump start_menu
 
@@ -62,7 +61,7 @@ label variables:
     $ opponent_card = " "
     $ level = 1
     $ winner = " "
-    $ money = 2000
+    $ money = 10000
     $ bet = 0
     $ opponent_name = " "
     $ player_score = 0
@@ -80,7 +79,7 @@ label gameplay:
     $ text = level
     $ player_card = " "
     $ opponent_card = " " 
-    $ opponent_score = 0
+    $ player_score = 0
     $ opponent_score = 0
     $ round_number = 1
 
@@ -105,21 +104,57 @@ label bet_menu:
     menu:
         "Bet [bet]":
             if money-bet >= 0:
+                play sound "audio/chips_bet.ogg"
                 $ money -= bet
                 return
             else:
                 call show_text("You don't have enough balance") from _call_show_text_2
                 jump bet_menu
         "Quit":
+            # To hide scores
+            hide screen show_scores
             jump start_menu
 
 # Handle levels
 
 label level_1:
 
+    show cassandra    
+
+    cassandra """
+
+    Hi welcome to The Cardinal Sins: A card game
+
+    These are the rules of the game
+
+    The game will be different from the traditional rock, paper, scissors game. The players will be dealt with three random cards it will be either rock, paper, or scissors.
+
+    The player will start with 10,000 chips at the begging of the game.
+    
+    The game will progress through seven story chapters representing the seven deadly sins.
+
+    Higher level means higher betting chips.
+
+    If there is a tie, the player will play the cards until someone wins or the game ends.
+
+    Are you ready to play with The Cardinal Sins?
+    
+    """
+    
+    hide cassandra
+
+    window hide
+
     call show_text("Level 1") from _call_show_text_3
 
-    $ bet = 100
+    show cassandra
+
+    cassandra "Are you ready to play with Pride?"
+
+    hide cassandra
+    
+
+    $ bet = 1000
     
     # For displaying opponent images
 
@@ -133,7 +168,13 @@ label level_2:
 
     call show_text("Level 2") from _call_show_text_4
 
-    $ bet = 200 
+    show cassandra
+
+    cassandra "Are you ready to play with Envy?"
+
+    hide cassandra
+
+    $ bet = 2000 
 
     $ opponent_name = "envy"
 
@@ -142,7 +183,13 @@ label level_2:
 label level_3:
     call show_text("Level 3") from _call_show_text_5
 
-    $ bet = 300 
+    show cassandra
+
+    cassandra "Are you ready to play with Gluttony?"
+
+    hide cassandra
+
+    $ bet = 3000 
 
     $ opponent_name = "gluttony"
     jump play_round
@@ -150,7 +197,13 @@ label level_3:
 label level_4:
     call show_text("Level 4") from _call_show_text_6
 
-    $ bet = 400 
+    show cassandra
+
+    cassandra "Are you ready to play with Lust?"
+
+    hide cassandra
+
+    $ bet = 4000 
 
     $ opponent_name = "lust"
     jump play_round
@@ -158,7 +211,13 @@ label level_4:
 label level_5:
     call show_text("Level 5") from _call_show_text_7
 
-    $ bet = 500 
+    show cassandra
+
+    cassandra "Are you ready to play with Anger?"
+
+    hide cassandra
+
+    $ bet = 5000 
 
     $ opponent_name = "anger"
     jump play_round
@@ -166,7 +225,13 @@ label level_5:
 label level_6:
     call show_text("Level 6") from _call_show_text_8
 
-    $ bet = 600
+    show cassandra
+
+    cassandra "Are you ready to play with Greed?"
+
+    hide cassandra
+
+    $ bet = 6000
 
     $ opponent_name = "greed"
     jump play_round
@@ -174,7 +239,13 @@ label level_6:
 label level_7:
     call show_text("Level 7") from _call_show_text_9
 
-    $ bet = 700
+    show cassandra
+
+    cassandra "Are you ready to play with Sloth?"
+
+    hide cassandra
+
+    $ bet = 7000
 
     $ opponent_name = "sloth"
     jump play_round
@@ -185,9 +256,9 @@ label play_round:
 
     show screen show_scores
 
-    while player_score != 3 and opponent_score != 3:
+    while round_number <= 3:
 
-        call show_round(round_number)
+        call show_round(round_number) from _call_show_round
 
         call bet_menu from _call_bet_menu
 
@@ -202,7 +273,7 @@ label play_round:
         # Opponent turn
 
         hide cassandra
-        call show_opponent
+        call show_opponent from _call_show_opponent
         call show_text("Opponents turn") from _call_show_text_11
 
         # To generate random number
@@ -218,7 +289,8 @@ label play_round:
         else:
             $ opponent_card = "scissors"
 
-        call show_text("Result")
+        play sound "audio/jack_en_poy.ogg"
+        call show_text("Result") from _call_show_text_15
 
         # For deciding winner
 
@@ -247,25 +319,27 @@ label play_round:
         # To handle winner       
 
         if winner == "player":
-            call show_text("You win") 
+            play sound "audio/win.ogg"
+            call show_text("You win") from _call_show_text_16 
             $ player_score += 1
             $ round_number += 1
             $ bet += bet
         
         elif winner == "opponent":
-            call show_text("You lose") 
+            play sound "audio/lost.ogg"
+            call show_text("You lose") from _call_show_text_17 
             $ opponent_score += 1
             $ round_number += 1
             $ bet += bet
         else:
-            call show_text("Tie") 
+            call show_text("Tie") from _call_show_text_18 
             $ money += bet
 
     # To hide scores
 
-    hide show_score
+    hide screen show_scores
 
-    if player_score == 3:
+    if player_score > opponent_score:
         call show_text("You win the game") from _call_show_text_12
         $ level += 1
         $ money += bet
@@ -299,7 +373,7 @@ label show_opponent:
     if opponent_name == "pride":
         show pride_turn
     elif opponent_name == "envy":
-        show envy_tur
+        show envy_turn
     elif opponent_name == "gluttony":
         show gluttony_turn 
     elif opponent_name == "greed":
@@ -405,7 +479,7 @@ screen choose_cards:
 # To display the current money of the player
 
 screen show_money:
-    text "Current money: [money]":
+    text "Chips: [money]":
         xalign 0.5
         yalign 0.1
 
