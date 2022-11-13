@@ -13,14 +13,21 @@ image cassandra:
     pause 0.1
     "images/cassandra/cassandra_1.png"
 
-image opponent:
-    "images/[opponent_name]/[opponent_name]_1.png"
-    pause 0.1
-    "images/[opponent_name]/[opponent_name]_2.png"
+# For opponet video when choosing attack 
+
+image pride_turn = Movie(play = "images/pride/pride.webm", loop = False)
+image envy_turn = Movie(play = "images/envy/envy.webm", loop = False)
+image gluttony_turn = Movie(play = "images/gluttony/gluttony.webm", loop = False)
+image greed_turn = Movie(play = "images/greed/greed.webm", loop = False)
+image lust_turn = Movie(play = "images/lust/lust.webm", loop = False)
+image sloth_turn = Movie(play = "images/sloth/sloth.webm", loop = False)
+image anger_turn = Movie(play = "images/anger/anger.webm", loop = False)
 
 # The game starts here.
 
 label start:
+
+    stop music
 
     scene bg intro
 
@@ -56,8 +63,11 @@ label variables:
     $ level = 1
     $ winner = " "
     $ money = 2000
-    $ beat = 0
+    $ bet = 0
     $ opponent_name = " "
+    $ player_score = 0
+    $ opponent_score = 0
+    $ round_number = 1
     return
 
 # Manage game and level
@@ -70,6 +80,9 @@ label gameplay:
     $ text = level
     $ player_card = " "
     $ opponent_card = " " 
+    $ opponent_score = 0
+    $ opponent_score = 0
+    $ round_number = 1
 
     if level == 1:
         jump level_1
@@ -86,18 +99,18 @@ label gameplay:
     elif level == 7:
         jump level_7
 
-# To display the beat in each game and subtruct the beat to the current money of player
+# To display the bet in each game and subtruct the bet to the current money of player
 
-label beat_menu:
+label bet_menu:
     menu:
-        "Beat [beat]":
-            if money-beat >= 0:
-                $ money -= beat
+        "Bet [bet]":
+            if money-bet >= 0:
+                $ money -= bet
                 return
             else:
                 call show_text("You don't have enough balance") from _call_show_text_2
-                jump gameplay
-        "Main menu":
+                jump bet_menu
+        "Quit":
             jump start_menu
 
 # Handle levels
@@ -106,9 +119,7 @@ label level_1:
 
     call show_text("Level 1") from _call_show_text_3
 
-    $ beat = 100
-    
-    call beat_menu from _call_beat_menu
+    $ bet = 100
     
     # For displaying opponent images
 
@@ -122,9 +133,7 @@ label level_2:
 
     call show_text("Level 2") from _call_show_text_4
 
-    $ beat = 200 
-    
-    call beat_menu from _call_beat_menu_1
+    $ bet = 200 
 
     $ opponent_name = "envy"
 
@@ -133,8 +142,7 @@ label level_2:
 label level_3:
     call show_text("Level 3") from _call_show_text_5
 
-    $ beat = 300 
-    call beat_menu from _call_beat_menu_2
+    $ bet = 300 
 
     $ opponent_name = "gluttony"
     jump play_round
@@ -142,8 +150,7 @@ label level_3:
 label level_4:
     call show_text("Level 4") from _call_show_text_6
 
-    $ beat = 400 
-    call beat_menu from _call_beat_menu_3
+    $ bet = 400 
 
     $ opponent_name = "lust"
     jump play_round
@@ -151,8 +158,7 @@ label level_4:
 label level_5:
     call show_text("Level 5") from _call_show_text_7
 
-    $ beat = 500 
-    call beat_menu from _call_beat_menu_4
+    $ bet = 500 
 
     $ opponent_name = "anger"
     jump play_round
@@ -160,8 +166,7 @@ label level_5:
 label level_6:
     call show_text("Level 6") from _call_show_text_8
 
-    $ beat = 600
-    call beat_menu from _call_beat_menu_5
+    $ bet = 600
 
     $ opponent_name = "greed"
     jump play_round
@@ -169,8 +174,7 @@ label level_6:
 label level_7:
     call show_text("Level 7") from _call_show_text_9
 
-    $ beat = 700
-    call beat_menu from _call_beat_menu_6
+    $ bet = 700
 
     $ opponent_name = "sloth"
     jump play_round
@@ -179,37 +183,43 @@ label level_7:
     
 label play_round:
 
-    call player_card_randomizer from _call_player_card_randomizer
+    show screen show_scores
 
-    # players turn
+    while player_score != 3 and opponent_score != 3:
 
-    show cassandra
-    call show_text("Your turn") from _call_show_text_10
-    $ player_card = renpy.call_screen("choose_cards")
+        call show_round(round_number)
 
-    # Opponent turn
+        call bet_menu from _call_bet_menu
 
-    hide cassandra
-    show opponent
-    call show_text("Opponents turn") from _call_show_text_11
+        call player_card_randomizer from _call_player_card_randomizer
 
-    # To generate random number
+        # players turn
 
-    call card_picker from _call_card_picker
+        show cassandra
+        call show_text("Your turn") from _call_show_text_10
+        $ player_card = renpy.call_screen("choose_cards")
 
-    # To transform each number into a card
-    
-    if card_picked == 1:
-        $ opponent_card = "rock"
-    elif card_picked == 2:
-        $ opponent_card = "paper"
-    else:
-        $ opponent_card = "scissors"
+        # Opponent turn
 
-    hide opponent
+        hide cassandra
+        call show_opponent
+        call show_text("Opponents turn") from _call_show_text_11
 
-    while True:
+        # To generate random number
+
+        call card_picker from _call_card_picker
+
+        # To transform each number into a card
         
+        if card_picked == 1:
+            $ opponent_card = "rock"
+        elif card_picked == 2:
+            $ opponent_card = "paper"
+        else:
+            $ opponent_card = "scissors"
+
+        call show_text("Result")
+
         # For deciding winner
 
         if player_card == opponent_card:
@@ -234,40 +244,74 @@ label play_round:
         
         call show_choosen_card from _call_show_choosen_card
         
-        # To handle winner        
+        # To handle winner       
 
         if winner == "player":
-            call show_text("You win") from _call_show_text_12
-            $ level += 1
-            $ money += beat
+            call show_text("You win") 
+            $ player_score += 1
+            $ round_number += 1
+            $ bet += bet
+        
+        elif winner == "opponent":
+            call show_text("You lose") 
+            $ opponent_score += 1
+            $ round_number += 1
+            $ bet += bet
+        else:
+            call show_text("Tie") 
+            $ money += bet
 
-            # To handle end level winner
-            # Reset game and money to start at the beggining
+    # To hide scores
 
-            if level > 7:
-                call show_text("Congratiolations! You beat the game") from _call_show_text_13
+    hide show_score
+
+    if player_score == 3:
+        call show_text("You win the game") from _call_show_text_12
+        $ level += 1
+        $ money += bet
+
+        # To handle end level winner
+        # Reset game and money to start at the beggining
+
+        if level > 7:
+            call show_text("Congratiolations! You bet the game") from _call_show_text_13
+            $ level = 1
+            $ money = 2000
+            jump start_menu
+
+        menu:
+            "Continue to level [level]":
+                jump gameplay
+            "Main Menu":
+                jump start_menu
+    else:
+        call show_text("You lose the game") from _call_show_text_14
+        menu:
+            "Play Again":
+                jump gameplay
+            "Main menu":
                 $ level = 1
-                $ money = 2000
                 jump start_menu
 
-            menu:
-                "Continue to level [level]":
-                    jump gameplay
-                "Main Menu":
-                    jump start_menu
-        else:
-            if winner == "opponent":
-                call show_text("You lose") from _call_show_text_14
-            else:
-                $ money += beat
-                call show_text("Tie") from _call_show_text_15
+# To display oppent when their turn
 
-            menu:
-                "Play Again":
-                    jump gameplay
-                "Main menu":
-                    $ level = 1
-                    jump start_menu
+label show_opponent:
+    if opponent_name == "pride":
+        show pride_turn
+    elif opponent_name == "envy":
+        show envy_tur
+    elif opponent_name == "gluttony":
+        show gluttony_turn 
+    elif opponent_name == "greed":
+        show greed_turn
+    elif opponent_name == "lust":
+        show lust_turn
+    elif opponent_name == "sloth":
+        show sloth_turn
+    elif opponent_name == "anger":
+        show anger_turn
+    pause 1.5
+    return
 
 # To show choosen card of the player and the opponent
 
@@ -294,6 +338,14 @@ label show_choosen_card:
     hide player_picked_card
     hide opponent_picked_card 
 
+    return
+
+# To rounds text
+
+label show_round(round):
+    show text "Round [round]" at truecenter with dissolve
+    pause 1
+    hide text with dissolve
     return
     
 # To display text
@@ -355,4 +407,12 @@ screen choose_cards:
 screen show_money:
     text "Current money: [money]":
         xalign 0.5
+        yalign 0.1
+
+screen show_scores:
+    text "Player Score: [player_score]":
+        xalign 0.1
+        yalign 0.1
+    text "Opponent Score: [opponent_score]":
+        xalign 0.9
         yalign 0.1

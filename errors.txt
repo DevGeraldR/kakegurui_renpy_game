@@ -2,9 +2,11 @@
 errors listed below, and try again.
 
 
-File "game/screens.rpy", line 1: expected statement.
-    ﻿
-     ^
+The label _call_show_text_11 is defined twice, at File "game/script.rpy", line 204:
+        call show_text("Opponents turn") from _call_show_text_11
+and File "game/script.rpy", line 219:
+        call show_text("Result") from _call_show_text_11
+
 
 Ren'Py Version: Ren'Py 8.0.3.22090809
-Fri Nov 11 22:17:35 2022
+Sat Nov 12 20:02:37 2022

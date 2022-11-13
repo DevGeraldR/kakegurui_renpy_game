@@ -56,7 +56,7 @@ label variables:
     $ level = 1
     $ winner = " "
     $ money = 2000
-    $ beat = 0
+    $ bet = 0
     $ opponent_name = " "
     return
 
@@ -86,13 +86,13 @@ label gameplay:
     elif level == 7:
         jump level_7
 
-# To display the beat in each game and subtruct the beat to the current money of player
+# To display the bet in each game and subtruct the bet to the current money of player
 
-label beat_menu:
+label bet_menu:
     menu:
-        "Beat [beat]":
-            if money-beat >= 0:
-                $ money -= beat
+        "bet [bet]":
+            if money-bet >= 0:
+                $ money -= bet
                 return
             else:
                 call show_text("You don't have enough balance")
@@ -106,9 +106,9 @@ label level_1:
 
     call show_text("Level 1")
 
-    $ beat = 100
+    $ bet = 100
     
-    call beat_menu
+    call bet_menu
     
     # For displaying opponent images
 
@@ -122,9 +122,9 @@ label level_2:
 
     call show_text("Level 2")
 
-    $ beat = 200 
+    $ bet = 200 
     
-    call beat_menu
+    call bet_menu
 
     $ opponent_name = "envy"
 
@@ -133,8 +133,8 @@ label level_2:
 label level_3:
     call show_text("Level 3")
 
-    $ beat = 300 
-    call beat_menu
+    $ bet = 300 
+    call bet_menu
 
     $ opponent_name = "gluttony"
     jump play_round
@@ -142,8 +142,8 @@ label level_3:
 label level_4:
     call show_text("Level 4")
 
-    $ beat = 400 
-    call beat_menu
+    $ bet = 400 
+    call bet_menu
 
     $ opponent_name = "lust"
     jump play_round
@@ -151,8 +151,8 @@ label level_4:
 label level_5:
     call show_text("Level 5")
 
-    $ beat = 500 
-    call beat_menu
+    $ bet = 500 
+    call bet_menu
 
     $ opponent_name = "anger"
     jump play_round
@@ -160,8 +160,8 @@ label level_5:
 label level_6:
     call show_text("Level 6")
 
-    $ beat = 600
-    call beat_menu
+    $ bet = 600
+    call bet_menu
 
     $ opponent_name = "greed"
     jump play_round
@@ -169,8 +169,8 @@ label level_6:
 label level_7:
     call show_text("Level 7")
 
-    $ beat = 700
-    call beat_menu
+    $ bet = 700
+    call bet_menu
 
     $ opponent_name = "sloth"
     jump play_round
@@ -239,13 +239,13 @@ label play_round:
         if winner == "player":
             call show_text("You win")
             $ level += 1
-            $ money += beat
+            $ money += bet
 
             # To handle end level winner
             # Reset game and money to start at the beggining
 
             if level > 7:
-                call show_text("Congratiolations! You beat the game")
+                call show_text("Congratiolations! You bet the game")
                 $ level = 1
                 $ money = 2000
                 jump start_menu
@@ -259,7 +259,7 @@ label play_round:
             if winner == "opponent":
                 call show_text("You lose")
             else:
-                $ money += beat
+                $ money += bet
                 call show_text("Tie")
 
             menu:
